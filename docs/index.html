@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Daily Bulletin Dashboard</title>
+  <!-- Import jetbrains mono & playfair display fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Three.js Library CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+</head>
+<body>
+  <!-- Fixed Viewport Container -->
+  <div id="viewport" class="theme-newsprint">
+    <!-- CRT scanlines (visible only in terminal mode) -->
+    <div class="crt-overlay"></div>
+    <div class="crt-scanlines"></div>
+
+    <!-- HEADER -->
+    <header class="header-container">
+      <div class="header-left">
+        <h1 class="logo-title">THE DAILY BULLETIN</h1>
+      </div>
+      <div class="header-right">
+        <div class="date-time-block">
+          <div id="clock-time">00:00:00</div>
+          <div id="clock-date">LOADING...</div>
+        </div>
+        <button id="theme-toggle" class="btn-action" aria-label="Toggle Theme" title="Toggle Theme (Newsprint / Terminal)">
+          <!-- Inline SVG representing theme toggle -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+        </button>
+        <a href="assets/links.html" id="archive-toggle" class="btn-action" target="_blank" rel="noopener noreferrer" aria-label="Archival Newspaper Scans" title="Archival Newspaper Scans">
+          <!-- Inline SVG newspaper icon -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon">
+            <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path>
+            <path d="M18 14h-8"></path>
+            <path d="M15 18h-5"></path>
+            <path d="M10 6h8v4h-8V6Z"></path>
+          </svg>
+        </a>
+        <button id="settings-toggle" class="btn-action" aria-label="Open Settings" title="Dashboard Settings">
+          <!-- Inline SVG gear representing settings -->
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- TICKER MARQUEE -->
+    <div class="footer-ticker-bar">
+      <div class="ticker-label">NEWSWIRE:</div>
+      <div class="ticker-viewport">
+        <div id="ticker-marquee-inner" class="ticker-marquee">
+          <!-- Marquee spans injected via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN BODY GRID -->
+    <div class="dashboard-main">
+      
+      <!-- LEFT SECTION: ROUTINE & CALENDAR -->
+      <section class="left-section">
+        <!-- Routine Block -->
+        <div class="agenda-block border-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">DAILY ROUTINE ENGINE</h2>
+            <div class="streak-wrapper">
+              <span class="streak-label">STREAK:</span>
+              <div id="streak-matrix" class="streak-matrix">
+                <!-- Javascript will inject 7 dots -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="task-checklist">
+            <!-- Dynamic agenda item elements will be injected here -->
+          </div>
+        </div>
+
+        <!-- Schedule / Calendar Block -->
+        <div class="calendar-block border-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">TODAY'S SCHEDULE</h2>
+            <span class="calendar-subtext" id="schedule-day-label">LOCAL AGENDA</span>
+          </div>
+          <div id="schedule-grid" class="schedule-grid">
+            <!-- 4-column event items will be injected here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT SECTION: METEO, WebGL satellite & YT gate -->
+      <section class="right-section">
+        
+        <!-- Weather Telemetry -->
+        <div class="weather-block border-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">WEATHER</h2>
+            <span class="telemetry-source">OPEN-METEO // GLENDALE, CA // 91201</span>
+          </div>
+          <div class="weather-content">
+            <div id="weather-icon-container" class="weather-icon">
+              <!-- SVG inserted dynamically -->
+            </div>
+            <div class="weather-data">
+              <div class="weather-main">
+                <span id="weather-temp">--°F</span>
+                <span id="weather-desc">LOADING...</span>
+              </div>
+              <div class="weather-details">
+                <span id="weather-range">HIGH: -- | LOW: --</span>
+                <span id="weather-wind">WIND: -- MPH</span>
+                <span id="weather-humidity">HUMIDITY: --%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WebGL Satellite Viewport -->
+        <div class="satellite-block border-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">ORBITAL VIEWPORT</h2>
+            <span class="telemetry-source">NASA SATELLITE WIREFRAME</span>
+          </div>
+          <div id="satellite-canvas-container" class="satellite-canvas-container">
+            <!-- Three.js appends WebGLRenderer canvas here -->
+          </div>
+        </div>
+
+        <!-- Media Gate / Youtube WATCH LATER CTA -->
+        <div class="media-gate-block border-pane" id="youtube-cta-card">
+          <div class="media-lock-overlay" id="youtube-lock-overlay">
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" class="lock-icon">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ACCESS GATED: COMPLETE ALL TASKS</span>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/playlist?list=WL" target="_blank" rel="noopener noreferrer" id="youtube-link" class="youtube-cta-link">
+            <div class="youtube-cta-content">
+              <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" class="yt-play-icon">
+                <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+              <div class="youtube-cta-text">
+                <span class="youtube-cta-title">YOUTUBE WATCH LATER</span>
+                <span class="youtube-cta-subtitle">Tap to open curated playlist queue</span>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Generative Art Block (Ryoji Ikeda Inspired) -->
+        <div class="art-block border-pane">
+          <div class="pane-header">
+            <h2 class="pane-title">AESTHETIC TELEMETRY</h2>
+            <span class="telemetry-source">GLITCH-DATA // R.IKEDA</span>
+          </div>
+          <div class="art-canvas-container">
+            <canvas id="ikeda-canvas"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+    <!-- SETTINGS PANEL OVERLAY (Slide-out) -->
+    <div id="settings-panel" class="settings-drawer border-pane">
+      <div class="pane-header">
+        <h2 class="pane-title">SYSTEM SETTINGS</h2>
+        <button id="settings-close" class="btn-action" aria-label="Close Settings">
+          <!-- Inline SVG X to close -->
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="settings-content">
+        <div class="setting-item">
+          <label for="slider-title">Title Font Size</label>
+          <div class="slider-row">
+            <input type="range" id="slider-title" min="30" max="90" value="62">
+            <span id="val-title">62px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-checklist">Checklist Item Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-checklist" min="15" max="45" value="27">
+            <span id="val-checklist">27px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-time">Schedule Time Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-time" min="15" max="50" value="31">
+            <span id="val-time">31px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-event-title">Schedule Title Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-event-title" min="15" max="50" value="34">
+            <span id="val-event-title">34px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-weather-temp">Weather Temp Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-weather-temp" min="20" max="80" value="42">
+            <span id="val-weather-temp">42px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-weather-details">Weather Details Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-weather-details" min="10" max="30" value="14">
+            <span id="val-weather-details">14px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-media-link">Media Watch Link Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-media-link" min="12" max="40" value="22">
+            <span id="val-media-link">22px</span>
+          </div>
+        </div>
+        <div class="setting-item">
+          <label for="slider-ticker">Newswire Ticker Font</label>
+          <div class="slider-row">
+            <input type="range" id="slider-ticker" min="10" max="30" value="18">
+            <span id="val-ticker">18px</span>
+          </div>
+        </div>
+        <div class="setting-actions">
+          <button id="btn-settings-save-default" class="btn-action reset-btn" style="margin-bottom: 8px;">Set Current as Default</button>
+          <button id="btn-settings-reset" class="btn-action reset-btn">Reset Defaults</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Fullscreen Screensaver Overlay -->
+  <div id="screensaver" class="screensaver-overlay hidden">
+    <!-- Newsprint Screensaver (Vintage newspapers scrolling by) -->
+    <div id="screensaver-newsprint" class="screensaver-newsprint-content hidden">
+      <div class="vintage-scroller">
+        <img src="assets/newspapers/nyt_1912_titanic.jpg" alt="New York Times - Titanic Disaster (1912)">
+        <img src="assets/newspapers/sf_1906_earthquake.jpg" alt="San Francisco Call-Chronicle-Examiner - Great Earthquake (1906)">
+        <img src="assets/newspapers/london_1913-02-01_Middlesex_Gazette_f.jpg" alt="London Middlesex Gazette - Full Broadsheet (1913)">
+        <img src="assets/newspapers/paris_le_petit_journal.jpg" alt="Paris Le Petit Journal - Archival Folio (1916)">
+        <img src="assets/newspapers/cairo_egyptian_gazette.jpg" alt="The Egyptian Gazette - Cairo Archive (1915)">
+        <img src="assets/newspapers/tokyo_1923_kanto_earthquake.jpg" alt="Tokyo Kanto Press - Great Earthquake Archive (1923)">
+        <img src="assets/newspapers/sydney_1842_herald.jpg" alt="The Sydney Morning Herald - Australia Archive (1842)">
+        <img src="assets/newspapers/scan_1920_Reporte_de_El_Universal_-_p_gi.jpg" alt="Mexico City El Universal - Revolution Era (1920)">
+        <img src="assets/newspapers/hawaii_Ka_Lama_Hawaii_-_He_Ilio.jpg.jpg" alt="Ka Lama Hawaii - Kingdom of Hawaii Historic Scan (1834)">
+        <img src="assets/newspapers/paris_1914_mobilisation.jpg" alt="Le Petit Parisien - WWI Mobilisation Generale (1914)">
+        <img src="assets/newspapers/scan_1898_Newspaper_50aniversery_of_Empe.jpg" alt="Vienna Empire Broadside - European Press (1898)">
+        <img src="assets/newspapers/london_illustrated_news.jpg" alt="Illustrated London News - Archival Folio (1912)">
+        <img src="assets/newspapers/nyt_1920_wall_street.jpg" alt="New York Times - Wall Street Microfilm (1920)">
+        <!-- Loop buffer: Repeat first two images for seamless infinite scroll -->
+        <img src="assets/newspapers/nyt_1912_titanic.jpg" alt="New York Times - Titanic Disaster (1912)">
+        <img src="assets/newspapers/sf_1906_earthquake.jpg" alt="San Francisco Call-Chronicle-Examiner - Great Earthquake (1906)">
+      </div>
+    </div>
+    <!-- Terminal Screensaver (Fullscreen Matrix digital rain) -->
+    <div id="screensaver-terminal" class="screensaver-terminal-content hidden">
+      <canvas id="screensaver-rain-canvas"></canvas>
+    </div>
+  </div>
+
+  <!-- Client Application Script -->
+  <script src="app.js"></script>
+</body>
+</html>
