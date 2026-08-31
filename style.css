@@ -849,13 +849,16 @@ body {
   display: flex;
   align-items: stretch;
   overflow: hidden;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
 }
 
 .ticker-label {
   display: flex;
   align-items: center;
   padding: 0 16px;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: calc(var(--font-size-ticker) - 1px);
+  font-weight: 700;
   letter-spacing: 1px;
   z-index: 5;
   border-right: 2px solid #000000;
@@ -883,6 +886,7 @@ body {
   will-change: transform;
   animation: ticker 692s linear infinite;
   align-items: center;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
 }
 
 /* Pause scroll when touching or hovering */
@@ -894,8 +898,10 @@ body {
 .ticker-item {
   display: inline-block;
   padding: 0 25px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Courier Prime', 'Courier New', Courier, monospace;
   font-size: var(--font-size-ticker);
+  font-weight: 700;
+  letter-spacing: 0.5px;
   text-decoration: none;
   color: #FFFFFF;
   border-right: 1px solid rgba(255, 255, 255, 0.2);

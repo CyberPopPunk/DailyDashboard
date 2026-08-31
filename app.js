@@ -326,21 +326,25 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
+    const dummyEvents = [
+      { time: "09:00 AM", title: "Morning Standup & Focus", location: "Design Studio" },
+      { time: "11:30 AM", title: "Ukulele Practice & Song Study", location: "Music Room" },
+      { time: "02:00 PM", title: "Dashboard Architecture Review", location: "Main Office" },
+      { time: "05:30 PM", title: "50 Push-Ups & Fitness Workout", location: "Gym / Outdoors" }
+    ];
+
     try {
       const response = await fetch(url);
       if (!response.ok) throw new Error("Calendar service not available");
       const events = await response.json();
-      if (!Array.isArray(events) || events.length === 0) throw new Error("No events returned");
-      renderCards(events);
+      if (!Array.isArray(events) || events.length === 0 || events[0].title.includes("No upcoming events")) {
+        renderCards(dummyEvents);
+      } else {
+        renderCards(events);
+      }
     } catch (err) {
-      console.log("Using static sample schedule for GitHub Pages:", err.message);
-      const fallbackEvents = [
-        { time: "09:00 AM", title: "Morning Standup & Focus", location: "Desk" },
-        { time: "11:30 AM", title: "Ukulele Practice", location: "Studio" },
-        { time: "02:00 PM", title: "Codebase Review", location: "Workspace" },
-        { time: "05:30 PM", title: "50 Push-Ups & Workout", location: "Fitness" }
-      ];
-      renderCards(fallbackEvents);
+      console.log("Rendering sample calendar dummy events for demo:", err.message);
+      renderCards(dummyEvents);
     }
   }
 

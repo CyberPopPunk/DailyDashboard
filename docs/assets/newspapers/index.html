@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daily Bulletin // Historical Newspaper Archive & Microfilm Library</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #F9F9F7;
+      color: #111111;
+      font-family: 'Playfair Display', Georgia, serif;
+      padding: 30px 20px;
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 4px double #000000;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .header-title h1 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+    .header-title p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: #555555;
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-nav a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: bold;
+      color: #CC0000;
+      text-decoration: none;
+      border: 2px solid #000000;
+      padding: 8px 16px;
+      background-color: #FFFFFF;
+      display: inline-block;
+      transition: all 0.15s ease;
+    }
+    .header-nav a:hover {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 25px;
+    }
+    .archive-card {
+      border: 2px solid #000000;
+      background-color: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 4px 4px 0px #000000;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .archive-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #000000;
+    }
+    .card-thumb {
+      height: 260px;
+      overflow: hidden;
+      border-bottom: 2px solid #000000;
+      background-color: #000000;
+    }
+    .card-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      filter: sepia(0.3) contrast(1.1);
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .archive-card:hover .card-thumb img {
+      transform: scale(1.04);
+      filter: sepia(0.1) contrast(1.15);
+    }
+    .card-details {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      margin-bottom: 6px;
+      color: #666666;
+    }
+    .city-tag {
+      background-color: #000000;
+      color: #FFFFFF;
+      padding: 2px 6px;
+      font-weight: bold;
+    }
+    .date-tag {
+      font-weight: bold;
+      color: #CC0000;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .card-title a {
+      color: #000000;
+      text-decoration: none;
+    }
+    .card-title a:hover {
+      text-decoration: underline;
+    }
+    .card-headline {
+      font-size: 13px;
+      font-style: italic;
+      color: #333333;
+      margin-bottom: 12px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .file-info {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      border-top: 1px dashed #CCCCCC;
+      padding-top: 8px;
+      margin-bottom: 12px;
+      color: #777777;
+    }
+    .btn-view {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      padding: 8px 12px;
+      background-color: #F0EFEA;
+      color: #000000;
+      border: 1.5px solid #000000;
+      text-decoration: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+    .btn-view:hover {
+      background-color: #CC0000;
+      color: #FFFFFF;
+    }
+    footer {
+      margin-top: 40px;
+      border-top: 2px solid #000000;
+      padding-top: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #666666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-title">
+        <h1>DAILY BULLETIN ARCHIVAL LIBRARY</h1>
+        <p>1930s & Earlier &bull; Microfilm Conversions &bull; Full-Page Broadsheet Scans</p>
+      </div>
+      <div class="header-nav">
+        <a href="../index.html">&larr; BACK TO DASHBOARD</a>
+      </div>
+    </header>
+
+    <main class="grid">
+      
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="nyt_1912_titanic.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="nyt_1912_titanic.jpg" alt="The New York Times" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">New York, USA</span>
+          <span class="date-tag">April 16, 1912</span>
+        </div>
+        <h2 class="card-title">
+          <a href="nyt_1912_titanic.jpg" target="_blank" rel="noopener noreferrer">The New York Times</a>
+        </h2>
+        <p class="card-headline">"TITANIC SINKS FOUR HOURS AFTER HITTING ICEBERG; 866 RESCUED BY CARPATHIA, PROBABLY 1,250 PERISH"</p>
+        <div class="file-info">
+          <span class="file-type">Full-Page Broadsheet Scan</span>
+          <span class="file-size">1.41 MB</span>
+        </div>
+        <a class="btn-view" href="nyt_1912_titanic.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="sf_1906_earthquake.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="sf_1906_earthquake.jpg" alt="The Call-Chronicle-Examiner" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">San Francisco, USA</span>
+          <span class="date-tag">April 19, 1906</span>
+        </div>
+        <h2 class="card-title">
+          <a href="sf_1906_earthquake.jpg" target="_blank" rel="noopener noreferrer">The Call-Chronicle-Examiner</a>
+        </h2>
+        <p class="card-headline">"EARTHQUAKE AND FIRE: SAN FRANCISCO IN RUINS"</p>
+        <div class="file-info">
+          <span class="file-type">Emergency Combined Press Issue</span>
+          <span class="file-size">1.30 MB</span>
+        </div>
+        <a class="btn-view" href="sf_1906_earthquake.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="london_1913-02-01_Middlesex_Gazette_f.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="london_1913-02-01_Middlesex_Gazette_f.jpg" alt="The Middlesex Gazette" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">London, United Kingdom</span>
+          <span class="date-tag">February 1, 1913</span>
+        </div>
+        <h2 class="card-title">
+          <a href="london_1913-02-01_Middlesex_Gazette_f.jpg" target="_blank" rel="noopener noreferrer">The Middlesex Gazette</a>
+        </h2>
+        <p class="card-headline">"GREATER LONDON & EMPIRE GAZETTE RECORD"</p>
+        <div class="file-info">
+          <span class="file-type">Microfilm Broadsheet Conversion</span>
+          <span class="file-size">1.39 MB</span>
+        </div>
+        <a class="btn-view" href="london_1913-02-01_Middlesex_Gazette_f.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="paris_le_petit_journal.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="paris_le_petit_journal.jpg" alt="Le Petit Journal" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Paris, France</span>
+          <span class="date-tag">April 23, 1916</span>
+        </div>
+        <h2 class="card-title">
+          <a href="paris_le_petit_journal.jpg" target="_blank" rel="noopener noreferrer">Le Petit Journal</a>
+        </h2>
+        <p class="card-headline">"LES RUSSES À ISPAHAN - ÉDITION DE GUERRE"</p>
+        <div class="file-info">
+          <span class="file-type">High-Resolution Archival Folio</span>
+          <span class="file-size">6.50 MB</span>
+        </div>
+        <a class="btn-view" href="paris_le_petit_journal.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="cairo_egyptian_gazette.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="cairo_egyptian_gazette.jpg" alt="The Egyptian Gazette" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Cairo, Egypt</span>
+          <span class="date-tag">1915</span>
+        </div>
+        <h2 class="card-title">
+          <a href="cairo_egyptian_gazette.jpg" target="_blank" rel="noopener noreferrer">The Egyptian Gazette</a>
+        </h2>
+        <p class="card-headline">"THE ENGLISH NEWSPAPER IN EGYPT AND THE FAR EAST"</p>
+        <div class="file-info">
+          <span class="file-type">Middle East Archival Microfilm</span>
+          <span class="file-size">4.53 MB</span>
+        </div>
+        <a class="btn-view" href="cairo_egyptian_gazette.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="tokyo_1923_kanto_earthquake.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="tokyo_1923_kanto_earthquake.jpg" alt="Osaka Mainichi / Tokyo Press" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Tokyo, Japan</span>
+          <span class="date-tag">September 1923</span>
+        </div>
+        <h2 class="card-title">
+          <a href="tokyo_1923_kanto_earthquake.jpg" target="_blank" rel="noopener noreferrer">Osaka Mainichi / Tokyo Press</a>
+        </h2>
+        <p class="card-headline">"THE GREAT KANTO EARTHQUAKE PICTORIAL ARCHIVE"</p>
+        <div class="file-info">
+          <span class="file-type">Taisho Era Disaster Record</span>
+          <span class="file-size">3.09 MB</span>
+        </div>
+        <a class="btn-view" href="tokyo_1923_kanto_earthquake.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="sydney_1842_herald.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="sydney_1842_herald.jpg" alt="The Sydney Morning Herald" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Sydney, Australia</span>
+          <span class="date-tag">August 1, 1842</span>
+        </div>
+        <h2 class="card-title">
+          <a href="sydney_1842_herald.jpg" target="_blank" rel="noopener noreferrer">The Sydney Morning Herald</a>
+        </h2>
+        <p class="card-headline">"COLONIAL COMMERCE & PACIFIC SHIPPING GAZETTE"</p>
+        <div class="file-info">
+          <span class="file-type">Early Australia Microfilm Conversion</span>
+          <span class="file-size">4.46 MB</span>
+        </div>
+        <a class="btn-view" href="sydney_1842_herald.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="scan_1920_Reporte_de_El_Universal_-_p_gi.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="scan_1920_Reporte_de_El_Universal_-_p_gi.jpg" alt="El Universal" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Mexico City, Mexico</span>
+          <span class="date-tag">May 22, 1920</span>
+        </div>
+        <h2 class="card-title">
+          <a href="scan_1920_Reporte_de_El_Universal_-_p_gi.jpg" target="_blank" rel="noopener noreferrer">El Universal</a>
+        </h2>
+        <p class="card-headline">"EL PERIODICO POLITICO DE LA REVOLUCION MEXICANA"</p>
+        <div class="file-info">
+          <span class="file-type">Mexican Revolution Front Page</span>
+          <span class="file-size">2.90 MB</span>
+        </div>
+        <a class="btn-view" href="scan_1920_Reporte_de_El_Universal_-_p_gi.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="hawaii_Ka_Lama_Hawaii_-_He_Ilio.jpg.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="hawaii_Ka_Lama_Hawaii_-_He_Ilio.jpg.jpg" alt="Ka Lama Hawaii" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Lahainaluna, Kingdom of Hawaii</span>
+          <span class="date-tag">1834</span>
+        </div>
+        <h2 class="card-title">
+          <a href="hawaii_Ka_Lama_Hawaii_-_He_Ilio.jpg.jpg" target="_blank" rel="noopener noreferrer">Ka Lama Hawaii</a>
+        </h2>
+        <p class="card-headline">"HE BUKE MOOLELO NO KA MOANA PAKIPIKA"</p>
+        <div class="file-info">
+          <span class="file-type">Historic Polynesian Islands Press</span>
+          <span class="file-size">0.55 MB</span>
+        </div>
+        <a class="btn-view" href="hawaii_Ka_Lama_Hawaii_-_He_Ilio.jpg.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="paris_1914_mobilisation.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="paris_1914_mobilisation.jpg" alt="Le Petit Parisien" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Paris, France</span>
+          <span class="date-tag">August 2, 1914</span>
+        </div>
+        <h2 class="card-title">
+          <a href="paris_1914_mobilisation.jpg" target="_blank" rel="noopener noreferrer">Le Petit Parisien</a>
+        </h2>
+        <p class="card-headline">"LE PREMIER JOUR DE LA MOBILISATION GÉNÉRALE"</p>
+        <div class="file-info">
+          <span class="file-type">WWI First Day Broadsheet</span>
+          <span class="file-size">1.68 MB</span>
+        </div>
+        <a class="btn-view" href="paris_1914_mobilisation.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="scan_1898_Newspaper_50aniversery_of_Empe.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="scan_1898_Newspaper_50aniversery_of_Empe.jpg" alt="Imperial European Broadside" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Vienna, Austro-Hungarian Empire</span>
+          <span class="date-tag">1898</span>
+        </div>
+        <h2 class="card-title">
+          <a href="scan_1898_Newspaper_50aniversery_of_Empe.jpg" target="_blank" rel="noopener noreferrer">Imperial European Broadside</a>
+        </h2>
+        <p class="card-headline">"JUBILÄUMS-AUSGABE KAISER FRANZ JOSEPH I."</p>
+        <div class="file-info">
+          <span class="file-type">Imperial European Broadsheet</span>
+          <span class="file-size">3.56 MB</span>
+        </div>
+        <a class="btn-view" href="scan_1898_Newspaper_50aniversery_of_Empe.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="london_illustrated_news.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="london_illustrated_news.jpg" alt="The Illustrated London News" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">London, United Kingdom</span>
+          <span class="date-tag">August 17, 1912</span>
+        </div>
+        <h2 class="card-title">
+          <a href="london_illustrated_news.jpg" target="_blank" rel="noopener noreferrer">The Illustrated London News</a>
+        </h2>
+        <p class="card-headline">"DISCOVERIES OF THE CENTURY & PREHISTORIC RECORDS"</p>
+        <div class="file-info">
+          <span class="file-type">Full-Page Illustrated Folio</span>
+          <span class="file-size">3.30 MB</span>
+        </div>
+        <a class="btn-view" href="london_illustrated_news.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="nyt_1920_wall_street.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="nyt_1920_wall_street.jpg" alt="The New York Times" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">New York, USA</span>
+          <span class="date-tag">September 17, 1920</span>
+        </div>
+        <h2 class="card-title">
+          <a href="nyt_1920_wall_street.jpg" target="_blank" rel="noopener noreferrer">The New York Times</a>
+        </h2>
+        <p class="card-headline">"WALL STREET BOMB EXPLOSION KILLS 30, INJURES HUNDREDS"</p>
+        <div class="file-info">
+          <span class="file-type">Full Microfilm Scan</span>
+          <span class="file-size">11.6 MB</span>
+        </div>
+        <a class="btn-view" href="nyt_1920_wall_street.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="scan_1912_Baltimore_American__April_16__.png" target="_blank" rel="noopener noreferrer">
+          <img src="scan_1912_Baltimore_American__April_16__.png" alt="The Baltimore American" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Baltimore, USA</span>
+          <span class="date-tag">April 16, 1912</span>
+        </div>
+        <h2 class="card-title">
+          <a href="scan_1912_Baltimore_American__April_16__.png" target="_blank" rel="noopener noreferrer">The Baltimore American</a>
+        </h2>
+        <p class="card-headline">"TITANIC REPORT & DISASTER RELIEF"</p>
+        <div class="file-info">
+          <span class="file-type">Historic Disaster Front Page</span>
+          <span class="file-size">2.17 MB</span>
+        </div>
+        <a class="btn-view" href="scan_1912_Baltimore_American__April_16__.png" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+
+    <article class="archive-card">
+      <div class="card-thumb">
+        <a href="scan_1880_Privreda_front_page_1880.jpg.jpg" target="_blank" rel="noopener noreferrer">
+          <img src="scan_1880_Privreda_front_page_1880.jpg.jpg" alt="Privreda Economic Gazette" loading="lazy">
+        </a>
+      </div>
+      <div class="card-details">
+        <div class="meta-row">
+          <span class="city-tag">Belgrade / Zagreb</span>
+          <span class="date-tag">1880</span>
+        </div>
+        <h2 class="card-title">
+          <a href="scan_1880_Privreda_front_page_1880.jpg.jpg" target="_blank" rel="noopener noreferrer">Privreda Economic Gazette</a>
+        </h2>
+        <p class="card-headline">"LIST ZA PRIVREDU, TRGOVINU I POLJODJELSTVO"</p>
+        <div class="file-info">
+          <span class="file-type">19th Century Economic Journal</span>
+          <span class="file-size">1.76 MB</span>
+        </div>
+        <a class="btn-view" href="scan_1880_Privreda_front_page_1880.jpg.jpg" target="_blank" rel="noopener noreferrer">
+          VIEW FULL RESOLUTION SCAN &rarr;
+        </a>
+      </div>
+    </article>
+  
+    </main>
+
+    <footer>
+      <p>DAILY BULLETIN SYSTEM // PUBLIC DOMAIN ARCHIVAL REPOSITORY // LOCAL ASSET HOST</p>
+    </footer>
+  </div>
+</body>
+</html>
