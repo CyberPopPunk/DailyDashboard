@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1133, height=744, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>THE DAILY BULLETIN // NEWSPRINT EDITION</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&family=JetBrains+Mono:wght@400;500;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    :root {
+      --bg-paper: #F9F9F7;
+      --ink-black: #111111;
+      --divider-grey: #E5E5E0;
+      --editorial-red: #CC0000;
+      --font-display: 'Playfair Display', 'Times New Roman', serif;
+      --font-body: 'Lora', Georgia, serif;
+      --font-sans: 'Inter', 'Helvetica Neue', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      border-radius: 0px !important;
+    }
+
+    html, body {
+      width: 1133px;
+      height: 744px;
+      background-color: var(--bg-paper);
+      color: var(--ink-black);
+      font-family: var(--font-body);
+      overflow: hidden;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' viewBox='0 0 4 4'%3E%3Cpath fill='%23111111' fill-opacity='0.04' d='M1 3h1v1H1V3zm2-2h1v1H3V1z'%3E%3C/path%3E%3C/svg%3E");
+    }
+
+    .viewport-root {
+      width: 1133px;
+      height: 744px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* MASTHEAD HEADER */
+    header {
+      border: 2px solid var(--ink-black);
+      border-bottom: 4px solid var(--ink-black);
+      padding: 6px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      background: var(--bg-paper);
+      height: 56px;
+      flex-shrink: 0;
+    }
+
+    .masthead-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 0.9;
+      text-transform: uppercase;
+    }
+
+    .edition-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      border-left: 2px solid var(--ink-black);
+      padding-left: 12px;
+      margin-left: 12px;
+    }
+
+    /* CLICKABLE TICKER */
+    .ticker-container {
+      height: 30px;
+      border: 2px solid var(--ink-black);
+      background: var(--ink-black);
+      color: var(--bg-paper);
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .ticker-badge {
+      background: var(--editorial-red);
+      color: #FFF;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      padding: 0 10px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border-right: 2px solid var(--ink-black);
+      z-index: 2;
+    }
+
+    .ticker-wrap {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .ticker-move {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: ticker 80s linear infinite;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .ticker-container:hover .ticker-move {
+      animation-play-state: paused;
+    }
+
+    .ticker-link {
+      color: var(--bg-paper);
+      text-decoration: none;
+      margin-right: 24px;
+      transition: color 0.15s ease;
+    }
+
+    .ticker-link:hover {
+      color: var(--editorial-red);
+      text-decoration: underline;
+    }
+
+    @keyframes ticker {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+
+    /* MAIN GRID LAYOUT */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr;
+      gap: 10px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 0;
+    }
+
+    .pane {
+      border: 1px solid var(--ink-black);
+      background: var(--bg-paper);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* SECTION HEADERS */
+    .pane-header {
+      border-bottom: 2px solid var(--ink-black);
+      padding: 6px 12px;
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #F0F0EC;
+      flex-shrink: 0;
+    }
+
+    /* AGENDA & STREAK DOTS */
+    .agenda-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .streak-container {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--ink-black);
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .streak-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .streak-dot-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .dot-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    .dot-indicator {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--ink-black);
+      background: var(--bg-paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.6rem;
+      font-family: var(--font-mono);
+    }
+
+    .dot-indicator.filled {
+      background: var(--ink-black);
+      color: #FFF;
+    }
+
+    .dot-indicator.today {
+      border-color: var(--editorial-red);
+    }
+
+    .agenda-list {
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .todo-row {
+      min-height: 52px;
+      border: 1px solid var(--ink-black);
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFF;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .todo-row:hover {
+      box-shadow: 3px 3px 0px 0px var(--ink-black);
+      transform: translate(-1px, -1px);
+    }
+
+    .todo-label {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .todo-btn {
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--ink-black);
+      background: var(--bg-paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+
+    .todo-row.completed {
+      opacity: 0.45;
+      background: var(--divider-grey);
+      box-shadow: none !important;
+      transform: none !important;
+    }
+
+    .todo-row.completed .todo-label span {
+      text-decoration: line-through;
+    }
+
+    .todo-row.completed .todo-btn {
+      background: var(--editorial-red);
+      color: #FFF;
+      border-color: var(--editorial-red);
+    }
+
+    /* CALENDAR CARDS */
+    .calendar-row-pane {
+      height: 135px;
+      flex-shrink: 0;
+    }
+
+    .calendar-cards-container {
+      padding: 8px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      height: 100%;
+    }
+
+    .calendar-card {
+      border: 1px solid var(--ink-black);
+      background: #FFF;
+      padding: 6px 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .calendar-card-time {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--editorial-red);
+      border-bottom: 1px solid var(--ink-black);
+      padding-bottom: 2px;
+    }
+
+    .calendar-card-title {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 2px 0;
+    }
+
+    .calendar-card-status {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      align-self: flex-start;
+      background: var(--divider-grey);
+      padding: 2px 4px;
+      text-transform: uppercase;
+    }
+
+    /* WEATHER BOX */
+    .weather-box {
+      border: 1px solid var(--ink-black);
+      padding: 8px 12px;
+      background: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 85px;
+      flex-shrink: 0;
+    }
+
+    .weather-temp {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1;
+      margin: 2px 0;
+    }
+
+    .weather-icon-svg {
+      width: 44px;
+      height: 44px;
+      fill: var(--ink-black);
+      flex-shrink: 0;
+    }
+
+    /* RESTORED 3D CANVAS VIEWPORT */
+    #canvas-container {
+      width: 100%;
+      height: 220px;
+      border: 1px solid var(--ink-black);
+      position: relative;
+      background: #F0F0EC;
+      flex-shrink: 0;
+    }
+
+    #canvas-container canvas {
+      display: block;
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    /* YOUTUBE WATCH LATER BUTTON (ORANGE BOX LOWER REGION) */
+    .yt-gated-btn {
+      flex: 1;
+      min-height: 64px;
+      border: 2px solid var(--ink-black);
+      background: var(--divider-grey);
+      color: #737373;
+      font-family: var(--font-sans);
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.15em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: not-allowed;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .yt-gated-btn svg {
+      width: 32px;
+      height: 32px;
+      fill: #737373;
+    }
+
+    .yt-gated-btn.unlocked {
+      opacity: 1;
+      background: var(--ink-black);
+      color: var(--bg-paper);
+      cursor: pointer;
+    }
+
+    .yt-gated-btn.unlocked svg {
+      fill: var(--editorial-red);
+    }
+
+    .yt-gated-btn.unlocked:hover {
+      background: #000;
+      box-shadow: 4px 4px 0px 0px var(--ink-black);
+      transform: translate(-2px, -2px);
+    }
+
+    .yt-gated-btn.unlocked:active {
+      background: var(--editorial-red);
+      color: #FFF;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .yt-gated-btn.unlocked:active svg {
+      fill: #FFF;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport-root">
+    
+    <header>
+      <div style="display:flex; align-items:flex-end;">
+        <span class="masthead-title">The Daily Bulletin</span>
+        <span class="edition-tag">Vol. LXXIV // Localhost</span>
+      </div>
+      <div id="sys-clock" style="font-family: var(--font-mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.1em;">00:00:00 LOCAL</div>
+    </header>
+
+    <div class="ticker-container">
+      <div class="ticker-badge">GOOD NEWS WIRE</div>
+      <div class="ticker-wrap">
+        <div class="ticker-move" id="news-ticker-content">
+          Loading live weekly headlines from verified news feeds...
+        </div>
+      </div>
+    </div>
+
+    <main class="dashboard-grid">
+      
+      <div class="left-column">
+        
+        <section class="pane agenda-pane">
+          <div class="pane-header">
+            <span>Daily Agenda</span>
+            <span id="task-status-tag" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--editorial-red); letter-spacing: 0.15em;">0/5 COMPLETED</span>
+          </div>
+
+          <div class="streak-container">
+            <div class="streak-dots" id="streak-dots-row">
+              </div>
+          </div>
+
+          <div class="agenda-list">
+            <div class="todo-row" onclick="toggleTask(this, 'task1')">
+              <div class="todo-label">
+                <div class="todo-btn">[ ]</div>
+                <span>Morning! App</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size:0.75rem; letter-spacing: 0.1em;">5 MIN</span>
+            </div>
+
+            <div class="todo-row" onclick="toggleTask(this, 'task2')">
+              <div class="todo-label">
+                <div class="todo-btn">[ ]</div>
+                <span id="dynamic-cleaning-task">10 min cleaning</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size:0.75rem; letter-spacing: 0.1em;">10 MIN</span>
+            </div>
+
+            <div class="todo-row" onclick="toggleTask(this, 'task3')">
+              <div class="todo-label">
+                <div class="todo-btn">[ ]</div>
+                <span>Make and check schedule</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size:0.75rem; letter-spacing: 0.1em;">10 MIN</span>
+            </div>
+
+            <div class="todo-row" onclick="toggleTask(this, 'task4')">
+              <div class="todo-label">
+                <div class="todo-btn">[ ]</div>
+                <span>Introduce yourself to one stranger</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size:0.75rem; letter-spacing: 0.1em;">5 MIN</span>
+            </div>
+
+            <div class="todo-row" onclick="toggleTask(this, 'task5')">
+              <div class="todo-label">
+                <div class="todo-btn">[ ]</div>
+                <span>Read 10 minutes</span>
+              </div>
+              <span style="font-family: var(--font-mono); font-size:0.75rem; letter-spacing: 0.1em;">10 MIN</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="pane calendar-row-pane">
+          <div class="pane-header">
+            <span>Today's Schedule</span>
+            <span style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--editorial-red); letter-spacing: 0.15em;">Outlook Sync</span>
+          </div>
+          <div class="calendar-cards-container">
+            <div class="calendar-card">
+              <div class="calendar-card-time">09:00 AM</div>
+              <div class="calendar-card-title">Team Standup</div>
+              <div class="calendar-card-status" style="background: var(--editorial-red); color: #FFF;">CONFIRMED</div>
+            </div>
+            <div class="calendar-card">
+              <div class="calendar-card-time">11:30 AM</div>
+              <div class="calendar-card-title">Arch Review</div>
+              <div class="calendar-card-status">PENDING</div>
+            </div>
+            <div class="calendar-card">
+              <div class="calendar-card-time">02:00 PM</div>
+              <div class="calendar-card-title">Client Onboard</div>
+              <div class="calendar-card-status">PENDING</div>
+            </div>
+            <div class="calendar-card">
+              <div class="calendar-card-time">04:30 PM</div>
+              <div class="calendar-card-title">Server Deploy</div>
+              <div class="calendar-card-status">PENDING</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="right-column pane" style="padding: 8px;">
+        <div class="pane-header" style="margin: -8px -8px 0 -8px;">
+          <span>Telemetry</span>
+        </div>
+        
+        <div class="weather-box" style="margin-top: 8px;">
+          <div>
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; color: #737373; letter-spacing: 0.1em;">METEO // LOCALHOST</div>
+            <div class="weather-temp">72°F</div>
+            <div style="font-family: var(--font-mono); font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;">PARTLY CLOUDY | HUM: 45%</div>
+          </div>
+          <svg class="weather-icon-svg" viewBox="0 0 24 24">
+            <path d="M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm6.364 2.636a1 1 0 0 1 0 1.414l-.707.707a1 1 0 0 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zM21 11a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2h1zM6.343 4.636a1 1 0 0 1 1.414 0l.707.707a1 1 0 0 1-1.414 1.414l-.707-.707a1 1 0 0 1 0-1.414zM19.364 15.364a1 1 0 0 1 0 1.414l-.707.707a1 1 0 0 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0zM19.35 10.04A6 6 0 0 0 8.042 8.05 4.5 4.5 0 0 0 3.5 12.5 4.5 4.5 0 0 0 8 17h11a3.5 3.5 0 0 0 .35-6.96zM8 15a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 .4.03 4 4 0 0 1 7.51 1.47A1.5 1.5 0 0 1 19 15H8z"/>
+          </svg>
+        </div>
+
+        <div id="canvas-container"></div>
+
+        <a id="yt-btn" href="javascript:void(0)" onclick="launchYouTube(event)" class="yt-gated-btn">
+          <svg viewBox="0 0 24 24">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span id="yt-btn-text">Watch Later [Locked]</span>
+        </a>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    function updateClock() {
+      const d = new Date();
+      document.getElementById('sys-clock').innerText = d.toTimeString().split(' ')[0] + ' LOCAL';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function setDailyCleaningTask() {
+      const cleaningSchedule = {
+        0: "10 min cleaning: Kitchen",
+        1: "10 min cleaning: Desk",
+        2: "10 min cleaning: Bedroom",
+        3: "10 min cleaning: Digital",
+        4: "10 min cleaning: Bathroom",
+        5: "10 min cleaning: Living room",
+        6: "10 min cleaning: Digital"
+      };
+      const dayIndex = new Date().getDay();
+      const taskElement = document.getElementById('dynamic-cleaning-task');
+      if (taskElement) {
+        taskElement.innerText = cleaningSchedule[dayIndex];
+      }
+    }
+
+    async function fetchGoodNews() {
+      const cacheKey = 'newsprint_good_news_cache';
+      const cacheTimeKey = 'newsprint_good_news_time';
+      const cachedNews = localStorage.getItem(cacheKey);
+      const cachedTime = localStorage.getItem(cacheTimeKey);
+      const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+      if (cachedNews && cachedTime && (Date.now() - parseInt(cachedTime) < ONE_WEEK_MS)) {
+        renderNewsTicker(JSON.parse(cachedNews));
+        return;
+      }
+
+      const rssUrl = encodeURIComponent('https://www.goodnewsnetwork.org/category/news/feed/');
+      const proxyUrl = `https://api.allorigins.win/get?url=${rssUrl}`;
+
+      try {
+        const response = await fetch(proxyUrl);
+        const data = await response.json();
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
+        const items = xmlDoc.querySelectorAll('item');
+
+        const headlines = [];
+        items.forEach((item, index) => {
+          if (index < 70) {
+            const title = item.querySelector('title')?.textContent || '';
+            const link = item.querySelector('link')?.textContent || 'https://www.goodnewsnetwork.org';
+            if (title) headlines.push({ title, link });
+          }
+        });
+
+        if (headlines.length > 0) {
+          localStorage.setItem(cacheKey, JSON.stringify(headlines));
+          localStorage.setItem(cacheTimeKey, Date.now().toString());
+          renderNewsTicker(headlines);
+        } else {
+          fallbackNewsTicker();
+        }
+      } catch (err) {
+        fallbackNewsTicker();
+      }
+    }
+
+    function renderNewsTicker(headlines) {
+      const container = document.getElementById('news-ticker-content');
+      container.innerHTML = headlines.map(item => 
+        `<a href="${item.link}" target="_blank" class="ticker-link">✦ ${item.title.toUpperCase()}</a>`
+      ).join(' ');
+    }
+
+    function fallbackNewsTicker() {
+      const fallbackData = [
+        { title: "OZONE LAYER ON TRACK TO FULLY RECOVER WITHIN DECADES", link: "https://news.un.org" },
+        { title: "GLOBAL RENEWABLE ENERGY CAPACITY GREW BY RECORD 50% THIS YEAR", link: "https://www.iea.org" },
+        { title: "WILD TIGER POPULATIONS HAVE INCREASED BY OVER 40% SINCE 2010", link: "https://www.worldwildlife.org" },
+        { title: "NEW SOLAR TECHNOLOGIES REACH RECORD 33% EFFICIENCY MILESTONE", link: "https://www.nature.com" }
+      ];
+      renderNewsTicker(fallbackData);
+    }
+
+    const DAYS_MAP = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    let todayIndex = new Date().getDay();
+
+    function initStreakDots() {
+      const row = document.getElementById('streak-dots-row');
+      row.innerHTML = '';
+      
+      let streakData = JSON.parse(localStorage.getItem('newsprint_streak_data')) || {
+        dots: [false, false, false, false, false, false, false],
+        lastDate: new Date().toDateString()
+      };
+
+      for (let i = 0; i < 7; i++) {
+        const box = document.createElement('div');
+        box.className = 'streak-dot-box';
+        
+        const label = document.createElement('div');
+        label.className = 'dot-label';
+        label.innerText = DAYS_MAP[i];
+        
+        const dot = document.createElement('div');
+        dot.className = `dot-indicator ${streakData.dots[i] ? 'filled' : ''} ${i === todayIndex ? 'today' : ''}`;
+        dot.id = `streak-dot-${i}`;
+        dot.innerText = streakData.dots[i] ? '●' : '○';
+
+        box.appendChild(label);
+        box.appendChild(dot);
+        row.appendChild(box);
+      }
+    }
+
+    let allDone = false;
+
+    function toggleTask(el, taskId) {
+      el.classList.toggle('completed');
+      const btn = el.querySelector('.todo-btn');
+      const isCompleted = el.classList.contains('completed');
+      
+      btn.innerText = isCompleted ? 'X' : '[ ]';
+      localStorage.setItem(`newsprint_task_${taskId}`, isCompleted);
+
+      checkGatedStatus();
+    }
+
+    function checkGatedStatus() {
+      const tasks = document.querySelectorAll('.todo-row');
+      const completed = document.querySelectorAll('.todo-row.completed');
+      const statusTag = document.getElementById('task-status-tag');
+      const ytBtn = document.getElementById('yt-btn');
+      const ytText = document.getElementById('yt-btn-text');
+
+      statusTag.innerText = `${completed.length}/${tasks.length} COMPLETED`;
+
+      let streakData = JSON.parse(localStorage.getItem('newsprint_streak_data')) || {
+        dots: [false, false, false, false, false, false, false],
+        lastDate: new Date().toDateString()
+      };
+
+      if (completed.length === tasks.length && tasks.length > 0) {
+        allDone = true;
+        statusTag.style.color = 'var(--ink-black)';
+        ytBtn.classList.add('unlocked');
+        ytText.innerText = 'Watch Later [Unlocked]';
+
+        streakData.dots[todayIndex] = true;
+      } else {
+        allDone = false;
+        statusTag.style.color = 'var(--editorial-red)';
+        ytBtn.classList.remove('unlocked');
+        ytText.innerText = 'Watch Later [Locked]';
+
+        streakData.dots[todayIndex] = false;
+      }
+
+      localStorage.setItem('newsprint_streak_data', JSON.stringify(streakData));
+      
+      const todayDot = document.getElementById(`streak-dot-${todayIndex}`);
+      if (todayDot) {
+        if (streakData.dots[todayIndex]) {
+          todayDot.classList.add('filled');
+          todayDot.innerText = '●';
+        } else {
+          todayDot.classList.remove('filled');
+          todayDot.innerText = '○';
+        }
+      }
+    }
+
+    function restoreSavedTasks() {
+      const taskRows = document.querySelectorAll('.todo-row');
+      taskRows.forEach((row, idx) => {
+        const taskId = `task${idx + 1}`;
+        const savedState = localStorage.getItem(`newsprint_task_${taskId}`);
+        if (savedState === 'true') {
+          row.classList.add('completed');
+          row.querySelector('.todo-btn').innerText = 'X';
+        }
+      });
+      checkGatedStatus();
+    }
+
+    function launchYouTube(e) {
+      if (!allDone) {
+        e.preventDefault();
+        alert('ACCESS DENIED: Complete all daily tasks to unlock YouTube Watch Later.');
+      } else {
+        window.open('https://www.youtube.com/playlist?list=WL', '_blank');
+      }
+    }
+
+    // --- THREE.JS RENDERER ENGINE ---
+    function init3DModel() {
+      const container = document.getElementById('canvas-container');
+      if (!container) return;
+
+      const width = container.clientWidth || 300;
+      const height = container.clientHeight || 220;
+
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0xF0F0EC);
+
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 0, 6);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(renderer.domElement);
+
+      const satelliteGroup = new THREE.Group();
+      const inkWireframeMat = new THREE.MeshBasicMaterial({ color: 0x111111, wireframe: true });
+
+      const bodyGeo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+      const bodyMesh = new THREE.Mesh(bodyGeo, inkWireframeMat);
+      satelliteGroup.add(bodyMesh);
+
+      const panelGeo = new THREE.BoxGeometry(2.5, 0.6, 0.05);
+      const leftPanel = new THREE.Mesh(panelGeo, inkWireframeMat);
+      leftPanel.position.set(-1.9, 0, 0);
+      satelliteGroup.add(leftPanel);
+
+      const rightPanel = new THREE.Mesh(panelGeo, inkWireframeMat);
+      rightPanel.position.set(1.9, 0, 0);
+      satelliteGroup.add(rightPanel);
+
+      const dishGeo = new THREE.ConeGeometry(0.6, 0.4, 8);
+      const dishMesh = new THREE.Mesh(dishGeo, inkWireframeMat);
+      dishMesh.position.set(0, 0.8, 0);
+      dishMesh.rotation.x = Math.PI;
+      satelliteGroup.add(dishMesh);
+
+      scene.add(satelliteGroup);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        satelliteGroup.rotation.y += 0.008;
+        satelliteGroup.rotation.x += 0.004;
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    window.addEventListener('load', () => {
+      setDailyCleaningTask();
+      initStreakDots();
+      restoreSavedTasks();
+      fetchGoodNews();
+      init3DModel();
+    });
+  </script>
+</body>
+</html>
