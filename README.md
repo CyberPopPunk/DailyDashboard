@@ -2,6 +2,9 @@
 
 A retro, high-contrast, dual-theme personal daily productivity dashboard engineered for dedicated display on an iPad or standalone touchscreen.
 
+🌐 **Live GitHub Pages Demo**: **[https://cyberpoppunk.github.io/DailyDashboard/](https://cyberpoppunk.github.io/DailyDashboard/)**
+🏛️ **Archival Scans Gallery**: **[https://cyberpoppunk.github.io/DailyDashboard/assets/links.html](https://cyberpoppunk.github.io/DailyDashboard/assets/links.html)**
+
 ---
 
 ## Features
